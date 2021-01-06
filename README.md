@@ -277,7 +277,7 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
     
 * 11.ElementUI
   导入vue的main.js文件下
-  ```
+```
   import Vue from 'vue';
   import ElementUI from 'element-ui';
   import 'element-ui/lib/theme-chalk/index.css';
@@ -290,14 +290,8 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
   render: h => h(App)
   });
 
-  ```
-  
-  
-  
-  
-## 2.6 Product Service API
-
-* **2020.12.19 ,搭建后台管理系统**
+```
+### 2.6 Product Service API
 
 接下来“第一阶段”基本都是前端技术。很好的锻炼的全栈能力。
 The first stage is front-end.

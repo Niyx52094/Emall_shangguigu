@@ -293,15 +293,19 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
   ```
   
   
-### 2.6 Product Service API
+  
+  
+## 2.6 Product Service API
 
-  接下来“第一阶段”基本都是前端技术。很好的锻炼的全栈能力。
-  The first stage is front-end.
+* **2020.12.19 ,搭建后台管理系统**
+
+接下来“第一阶段”基本都是前端技术。很好的锻炼的全栈能力。
+The first stage is front-end.
   
-  #### 2.6.1 Administrator API of Product category (Tree_strcture administration)
-  1.创建页面的商品分类三层级的树状结构。
+#### 2.6.1 Administrator API of Product category (Tree_strcture administration)
+* 1.创建页面的商品分类三层级的树状结构。
   
-  使用controller，service interface，impl，and Dao， use Mybaits-plus, using stream() syntax to filter the corresponding menu. Here the getChildren() is the helper method to get all the children of the menu.
+使用controller，service interface，impl，and Dao， use Mybaits-plus, using stream() syntax to filter the corresponding menu. Here the getChildren() is the helper method to get all the children of the menu.
   ```
     //1.查出所有分类//check all the product name
     List<CategoryEntity> categoryEntities = baseMapper.selectList(null);
@@ -319,10 +323,10 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
 }
 
   ```
-2.学习了后台管理系统，显示树状结构，这里面涉及到，把renren-vue绑定的renren-fast路径8080改为全部通关网关88端口，用网关的路由功能路由到8080端口。同样，通过网关在“分类维护”下面路由到到商品服务，并成功显示上述的树状结构。当然要做到这两点都需要在nacos注册中心注册。
+* 2.学习了后台管理系统，显示树状结构，这里面涉及到，把renren-vue绑定的renren-fast路径8080改为全部通关网关88端口，用网关的路由功能路由到8080端口。同样，通过网关在“分类维护”下面路由到到商品服务，并成功显示上述的树状结构。当然要做到这两点都需要在nacos注册中心注册。
 
-3.完成树状结构的删除，修改，新增并学习了逻辑删除。逻辑删除是没有把数据库真正删除的操作。确定一个状态位，状态位为0说明这个元素被删除了，就不会显示在前端。这个状态位在实体类里面需要用```@TableLogic```注解掉，那么正常使用delete就可以，数据库不会删除，会改状态位。
-4.完成了树状结构的拖拽效果。并给予条件当全部层级大于3时不能拖拽成功。完成拖拽的层级，父节点Id,当前节点排序位置的前端显示。
+* 3.完成树状结构的删除，修改，新增并学习了逻辑删除。逻辑删除是没有把数据库真正删除的操作。确定一个状态位，状态位为0说明这个元素被删除了，就不会显示在前端。这个状态位在实体类里面需要用```@TableLogic```注解掉，那么正常使用delete就可以，数据库不会删除，会改状态位。
+* 4.完成了树状结构的拖拽效果。并给予条件当全部层级大于3时不能拖拽成功。完成拖拽的层级，父节点Id,当前节点排序位置的前端显示。
   
 * **2021.1.3**
 * 5.完成拖拽效果的数据收集，拖拽效果的开关，优化拖拽效果，使用“批量保存”在最后一步才进行数据库交互；

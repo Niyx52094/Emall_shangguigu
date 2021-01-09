@@ -326,7 +326,7 @@ The first stage is front-end.
 * 5.完成拖拽效果的数据收集，拖拽效果的开关，优化拖拽效果，使用“批量保存”在最后一步才进行数据库交互；
 * 6.使用elementUI 完成“批量删除”
 
-**Finish the Category administration APIs**
+* **Finish the Category administration APIs**
 
 #### 2.6.2 Administrator APIs of Product Brand
 * 1.完成管理页面的优化，使用elementUI中的开关组件把“显示状态”从数字变成开关，开表示"1",关表示"0"，自定义显示模板用template slot-scope。scope可以抓取当前位置需要显示的所有"行",“列”，“内部管理”等数据。
@@ -337,5 +337,129 @@ The first stage is front-end.
 * 6.取消```BindingResult```，使用springMVC提供的```@ControllerAdvice```编写实体类```GulimallExceptionControllerAdvice```进行统一的异常管理。用@ResponceBody封装异常数据返回给前端显示。
 * 7.使用分组校验功能，有的属性在新增时不需要添加，但是修改时必须非空，这样可以用groups来选择。编写两个接口```AddGroups```和```UpdatesGroups```，把controller里头的```@Valid```改为```@Validated({XXX.class})```这样就能让属性在不同状态下进行不同的校验。
 
-**Finish the brand administration APIs**
+* **Finish the brand administration APIs**
+
+* **2021.01.09**
+#### 2.6.3 Administrator APIs of Product Attribute Groups
+
+从这里开始不再进行前端的撰写，而是使用“接口文档”获得前端的请求已经响应返回的数据封装，从接口文档中知道后端的接收与返回，专注于后端的编写。
+* 1.创建前端common文件夹，抽取```Category.vue```的树状结构回显。在```attrGroup.vue```中导入组件获得在属性页面显示的树状结构。
+* 2.使用子父组件信息传递功能，使用```this.$emit("functionName",data)```来泄露给父组件函数，父组件使用```v-on```或者```@```来使用它。获得在点击上述树状结构时，被点击的节点的node，data，用于在旁边显示节点所拥有的属性。
+* 3.使用上述获得的子节点catelogID获得```pms_attr_group```的相关属性分组.并使用mybatis-plus完成模糊查询的查询功能APIs.
+* 4. 完成新增APIs,在新增中使用使用级联选择器来选择树状架构的子节点，级联选择器发送的请求时一个catelogPath的从根到叶节点的数组，前端显示用props来正确找到显示的name。默认的label在这里的项目是没有的。
+* 5.完成修改功能APIs，发现属性Id没有回显，需要回显一个上述的根节点到叶子节点的数组，但是这个在数据库里面没有，所以在实体类里面加上后用```@Tablefield（exist=false）```注释掉。在service里面使用循环或者递归获得一整个路径。然后回显。
+* 6.加入mybatis-plus的分页插件，正确获取记录的条数，每页显示数目等。
+* 7.对Product brand 新增关联categories的分类，因为一个品牌可能在手机中有业务，也可能买家电，手表等。相当于操作```brand_category_relation```这张表，完成这个Controller的增删改查APIs。
+* 8. 对category和brand进行修改时，上述的关联表一旦查询出有响应值也要同步修改。
+* **Finish the Attributes groups administration APIs**
+#### 2.6.4 Administrator APIs of Product Attributes
+
+*在前面所有实体回显与数据库表不一致的地方都加了注解，这是不规范的，业内现在使用```VO(ValueObject)```来做。新建一个VO文件夹，创建一个VO类能够集成数据库对应的实体类。在这个VO实体类里面加入回显给前端的额外属性。*
+* 1.在vo中心怎AttrVo新增```attrgroup_id```新增```pms_attr```这张表，并同时新增```attr_attrgroup```这张关联表。获得attr里面的```attrgroup_id ```和自己的```attr_id```，编写一个```relation```实体类，加入这两个值后用mybatis-plus的```.insert```函数新增。
+```
+@Override
+public void saveAttr(AttrVo attrVo) {
+    AttrEntity attrEntity = new AttrEntity();
+    //在两个实体类属性名完全相同时可以拷贝,前面的值拷贝后面的值
+    BeanUtils.copyProperties(attrVo,attrEntity);
+    //1.基本保存：
+    this.save(attrEntity);
+    //2.保存关联关系
+    Long attrGroupId = attrVo.getAttrGroupId();
+    Long attrId = attrEntity.getAttrId();//用attrentity的ID
+    AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
+    attrAttrgroupRelationEntity.setAttrId(attrId);
+    attrAttrgroupRelationEntity.setAttrGroupId(attrGroupId);
+    attrAttrgroupRelationDao.insert(attrAttrgroupRelationEntity);
+}
+```
+* 2.查询APIs的接口文档中发现后端回显时多了```属性分组名称```和```分类名称```，所以在controller里面要查询```attrgroup```，```category```这两张表，而查询这两张表又要查询响应的relarion表。回显的实体类是新建一个```AttrResVo```，加入这两个属性。使用```BeanUtils.copyProperties(a,b)```来获得一般通用的参数（a赋值给相同属性名称的b）。使用page的```getRecords```来获得需要改变的```List<AttrEntity>```将每一个```AttrEntity```使用java的流函数```stream()```来转换为```AttrResVo```。
+```
+List<AttrEntity> records = page.getRecords();
+        //从AttrEntity转换为AttrResVo
+        List<AttrResVo> res = records.stream().map((obj) -> {
+            AttrResVo attrResVo = new AttrResVo();
+            BeanUtils.copyProperties(obj,attrResVo);
+            Long catelogId = obj.getCatelogId();
+            //使用 pms_category 的 Dao获得name
+            CategoryEntity categoryEntity = categoryDao.selectById(catelogId);
+            if(categoryEntity!=null){
+                attrResVo.setCatelogName(categoryEntity.getName());
+            }
+
+            //获得attr——group——name需要一张中间表和attr——group的表，所以导入两个Dao
+            AttrAttrgroupRelationEntity entity = attrAttrgroupRelationDao.selectOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", obj.getAttrId()));
+            if(entity!=null){
+                AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(entity.getAttrGroupId());
+                attrResVo.setGroupName(attrGroupEntity.getAttrGroupName());
+            }
+            return attrResVo;
+        }).collect(Collectors.toList());
+
+
+        PageUtils pageUtils = new PageUtils(page);
+        pageUtils.setList(res);
+        return pageUtils;
+
+```
+* 3.修改APIs首先需要正确回显，逆向生成的回显实体类是```AttrEntity```，少了属性分组和属性分类，同样，修改成使用```AttrResVo```来回显。属性分类是一个级联选择器，需要后端返回一个完整的路径数组。最后确定修改的按钮使用update的controller函数。但是如果一开始在新增时候没有选择属性分组。这里按update就不能成功，因为一开始需要是一个新增操作。所以用selectCount来判断。当一个查询语句查出来的count>0时，说明这张表里面原来就已经有了这个值，这样就执行update，否则执行insert。
+```
+@Transactional
+@Override
+public void updateAttr(AttrVo attr) {
+
+    AttrEntity attrEntity = new AttrEntity();
+    
+    //copy the value to attrEntity, and update
+    BeanUtils.copyProperties(attr,attrEntity);
+    this.updateById(attrEntity);
+
+    //update pms_attr_attrgroup_relation table
+    Long attrGroupId = attr.getAttrGroupId();
+    AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
+    attrAttrgroupRelationEntity.setAttrId(attr.getAttrId());
+    attrAttrgroupRelationEntity.setAttrGroupId(attrGroupId);
+
+
+    Integer count = attrAttrgroupRelationDao.selectCount(new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attr.getAttrId()));
+    if(count>0){
+        //修改操作
+        attrAttrgroupRelationDao.update(
+                attrAttrgroupRelationEntity,
+                new UpdateWrapper<AttrAttrgroupRelationEntity>().eq("attr_id",attr.getAttrId())
+        );
+    }else{
+       //新增操作 
+       attrAttrgroupRelationDao.insert(attrAttrgroupRelationEntity);
+
+    }
+
+}
+
+```
+* 4.完成销售属性和规格参数的转换，销售属性的显示就是和规格参数用的同一张```psm_attr```表，```attrType```中1表示规格参数，0表示销售属性。发现销售属性的请求url与规格参数不同，所以在后端时使用```@RequestMapping("/{attrType}/list/{categoryId}")```来区分。然后再上述的修改查询新增里面加入判断是否为1即可。
+* 5. 编写一个constant类来储存```attrType```的1和0，这样对后续的修改很方便，而不需要再具体类中找寻。
+```
+public class ProductConstant {
+    public enum AttrEnum{
+        ATTR_TYPE_BASE(1,"基本属性"),ATTR_TYPE_SALE(0,"销售属性");
+        private int code;
+        private String msg;
+        AttrEnum(int code,String msg){
+            this.code=code;
+            this.msg=msg;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+    }
+
+}
+
+```
 

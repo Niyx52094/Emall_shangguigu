@@ -184,7 +184,7 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
        }//大括号内部为方法体，就是函数sum2内部的方法。
        console.log(sum3(10,13)//return 33
        ```
-### 2021.01.01**
+### 2021.01.01
   * 7. Map 和Reduce, 
     map是类似stream()和python的map，将箭头函数内的操作对所有列表内的值进行操作。
     Recuce是回调上一次操作的函数
@@ -350,7 +350,7 @@ The first stage is front-end.
 * 5.完成修改功能APIs，发现属性Id没有回显，需要回显一个上述的根节点到叶子节点的数组，但是这个在数据库里面没有，所以在实体类里面加上后用```@Tablefield（exist=false）```注释掉。在service里面使用循环或者递归获得一整个路径。然后回显。
 * 6.加入mybatis-plus的分页插件，正确获取记录的条数，每页显示数目等。
 * 7.对Product brand 新增关联categories的分类，因为一个品牌可能在手机中有业务，也可能买家电，手表等。相当于操作```brand_category_relation```这张表，完成这个Controller的增删改查APIs。
-* 8. 对category和brand进行修改时，上述的关联表一旦查询出有响应值也要同步修改。
+* 8.对category和brand进行修改时，上述的关联表一旦查询出有响应值也要同步修改。
 * **Finish the Attributes groups administration APIs**
 #### 2.6.4 Administrator APIs of Product Attributes
 

@@ -5,7 +5,7 @@
 
 ## 项目日志 Project log
 
-* **2020.12.18**
+### 2020.12.18
 
 开始进行项目学习。
 
@@ -26,7 +26,7 @@ redis持久化配置
 
 导入mysql五个表单。
 
-* **2020.12.19 ,搭建后台管理系统**
+### 2020.12.19 ,搭建后台管理系统
 
 
 前端网关的admin-vue使用码云上的“人人开源”项目下的文件，分别为fast，fast-vue,generator,下载对应nodejs版本10.16.3。把fast-vue里面的.git删除后放入vscode。同样把.git删除后fast与generator放入到idea的proj中，Generator与fast中的resources下application.yml从本机地址修改为虚拟机地址。fast中启动，vscode同样启动，最后获得两者配套的网页(我想这应该就是前后端分离了吧)。
@@ -44,7 +44,7 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
   2. genrator 的template慎重修改，我不小心注释了每个类前的@RequstMapping，结果生成的controller都没有这个，导致spring把这一整队controller变为一个，所以造成了很多方法冲突。。。改完之后增删改查成功。
 
 
-* **2020.12.26**
+### 2020.12.26
 
 * 1.学习了基本的Mybais-plus的操作，首先要在当前方法下创建实体，然后用Dao后面加.insert(该实体), .updatedById(this entity), .selectOne(..) , .selectByMap(..),.deleteByid(..)等进行增删改查。
 
@@ -184,7 +184,7 @@ generator可以自动生成entity，dao,controller,service等，非常方便。�
        }//大括号内部为方法体，就是函数sum2内部的方法。
        console.log(sum3(10,13)//return 33
        ```
- * **2020.12.29**
+### 2021.01.01**
   * 7. Map 和Reduce, 
     map是类似stream()和python的map，将箭头函数内的操作对所有列表内的值进行操作。
     Recuce是回调上一次操作的函数
@@ -322,7 +322,7 @@ The first stage is front-end.
 * 3.完成树状结构的删除，修改，新增并学习了逻辑删除。逻辑删除是没有把数据库真正删除的操作。确定一个状态位，状态位为0说明这个元素被删除了，就不会显示在前端。这个状态位在实体类里面需要用```@TableLogic```注解掉，那么正常使用delete就可以，数据库不会删除，会改状态位。
 * 4.完成了树状结构的拖拽效果。并给予条件当全部层级大于3时不能拖拽成功。完成拖拽的层级，父节点Id,当前节点排序位置的前端显示。
   
-* **2021.1.3**
+### 2021.1.3
 * 5.完成拖拽效果的数据收集，拖拽效果的开关，优化拖拽效果，使用“批量保存”在最后一步才进行数据库交互；
 * 6.使用elementUI 完成“批量删除”
 
@@ -339,7 +339,7 @@ The first stage is front-end.
 
 * **Finish the brand administration APIs**
 
-* **2021.01.09**
+### 2021.01.09
 #### 2.6.3 Administrator APIs of Product Attribute Groups
 
 从这里开始不再进行前端的撰写，而是使用“接口文档”获得前端的请求已经响应返回的数据封装，从接口文档中知道后端的接收与返回，专注于后端的编写。
@@ -438,7 +438,7 @@ public void updateAttr(AttrVo attr) {
 
 ```
 * 4.完成销售属性和规格参数的转换，销售属性的显示就是和规格参数用的同一张```psm_attr```表，```attrType```中1表示规格参数，0表示销售属性。发现销售属性的请求url与规格参数不同，所以在后端时使用```@RequestMapping("/{attrType}/list/{categoryId}")```来区分。然后再上述的修改查询新增里面加入判断是否为1即可。
-* 5. 编写一个constant类来储存```attrType```的1和0，这样对后续的修改很方便，而不需要再具体类中找寻。
+* 5.编写一个constant类来储存```attrType```的1和0，这样对后续的修改很方便，而不需要再具体类中找寻。
 ```
 public class ProductConstant {
     public enum AttrEnum{

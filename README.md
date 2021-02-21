@@ -462,4 +462,6 @@ public class ProductConstant {
 }
 
 ```
+### 2021.02.21
+* Finish the SPU and SKU CRUD including across different services by using FeignClient method
 

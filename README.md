@@ -3,6 +3,9 @@
 
 ### This is the full-stack development I'm currently working on. This Project focused on developing an E-mall like Taobao, Jingdong with the Micro-Service Structure using Java.I'll put the stage result to this file to share during the development.
 
+[front_end_codes](https://github.com/Niyx52094/Emall_shangguigu/tree/main/renren-fast-vue_beforeP75)
+[back_end_base_model_gulimall_code](https://github.com/Niyx52094/gulimall_base)
+
 ## 项目日志 Project log
 
 ### 2020.12.18
@@ -463,5 +466,11 @@ public class ProductConstant {
 
 ```
 ### 2021.02.21
-* Finish the SPU and SKU CRUD including across different services by using FeignClient method
+* Finish the SPU and SKU CRUD like product release including across different services by using FeignClient method.
+### 2021.02.22-23
+* Finish the Ware system design including show the purchase products,purchase detail products and ware CRUD.
+* Finish the update operation attributes of product  based on SPU Id in Product System.
+
+# Finish the Base Model of Gulimall
+
 
